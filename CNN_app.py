@@ -29,6 +29,8 @@ from PIL import Image
 # OpenCV preprocessing ke liye
 import cv2
 
+import pickle
+
 #Load Model
 with open('cnn_model.pkl','rb') as f:
     model=pickle.load(f)
