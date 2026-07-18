@@ -1,4 +1,3 @@
-# %%writefile app.py (It must be the first line at any cost)
 # Ye command current notebook cell ka code 'app.py' file me save karti hai.
 # Streamlit app banane aur deploy karne ke liye use hoti hai.
 
@@ -15,12 +14,11 @@ import streamlit as st
 import numpy as np
 import tensorflow as tf
 from PIL import Image, ImageOps
+import pickle
 
-# ===================== LOAD MODEL =====================
-
-# Saved .keras model ko load kar rahe hain
-# taaki bina dobara training ke prediction kar sake.
-model = tf.keras.models.load_model("mnist_cnn.keras")
+#Load Model
+with open('cnn_model.pkl','rb') as f:
+    model=pickle.load(f)
 
 # ===================== STREAMLIT UI =====================
 
