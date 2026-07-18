@@ -89,12 +89,10 @@ if uploaded_file is not None:
     # Background Black ho jata hai.
     # Digit White ho jata hai.
     # Ye format MNIST dataset jaisa hota hai.
-    _, image = cv2.threshold(
-        image,
-        0,
-        255,
-        cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU
-    )
+    _, image = cv2.threshold(image,0,255,cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    # Agar digit black ho to invert kar do
+    image = cv2.bitwise_not(image)
 
     # ===================== DIGIT EXTRACTION =====================
 
@@ -111,7 +109,10 @@ if uploaded_file is not None:
 
         # Sabse bada contour select kar rahe hain.
         # Normally wahi handwritten digit hota hai.
-        c = max(contours, key=cv2.contourArea)
+        # Bahut chhote contours hata do
+        contours = [c for c in contours if cv2.contourArea(c) > 100]
+        if contours:
+            c = max(contours, key=cv2.contourArea)
 
         # Bounding Rectangle digit ki exact position aur size deta hai.
         x, y, w, h = cv2.boundingRect(c)
@@ -151,6 +152,7 @@ if uploaded_file is not None:
     # Digit ko canvas ke center me paste kar rahe hain.
     canvas[y:y+new_h, x:x+new_w] = image
 
+
     # ===================== NORMALIZATION =====================
 
     # Pixel values ko 0-255 se convert karke 0-1 range me la rahe hain.
@@ -167,8 +169,11 @@ if uploaded_file is not None:
     # Final processed image display kar rahe hain.
     # Ye wahi image hai jo CNN ko prediction ke liye di jayegi.
     st.subheader("Processed Image")
-    st.image(canvas, width=150)
-        # ===================== PREDICTION =====================
+
+    # clamp=True image ko proper grayscale me display karta hai.
+    st.image(canvas,caption="Processed Image",width=150,clamp=True)
+
+    # ===================== PREDICTION =====================
 
     # Trained CNN model se uploaded image ka prediction kar rahe hain.
     # Output me 10 probabilities milti hain (Digits 0 se 9 tak).
