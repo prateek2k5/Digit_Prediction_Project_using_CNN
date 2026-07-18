@@ -168,65 +168,64 @@ if uploaded_file is not None:
     # Ye wahi image hai jo CNN ko prediction ke liye di jayegi.
     st.subheader("Processed Image")
     st.image(canvas, width=150)
+        # ===================== PREDICTION =====================
 
-# ===================== PREDICTION =====================
+    # Trained CNN model se uploaded image ka prediction kar rahe hain.
+    # Output me 10 probabilities milti hain (Digits 0 se 9 tak).
+    prediction = model.predict(img_array, verbose=0)
 
-# Trained CNN model se uploaded image ka prediction kar rahe hain.
-# Output me 10 probabilities milti hain (Digits 0 se 9 tak).
-prediction = model.predict(img_array, verbose=0)
+    # np.argmax() sabse highest probability wali class ka index return karta hai.
+    # Wahi index hamara final predicted digit hoga.
+    predicted_digit = np.argmax(prediction)
 
-# np.argmax() sabse highest probability wali class ka index return karta hai.
-# Wahi index hamara final predicted digit hoga.
-predicted_digit = np.argmax(prediction)
-
-# Highest probability nikal kar usse percentage me convert kar rahe hain.
-# Isse pata chalta hai model prediction ko kitna confidently kar raha hai.
-confidence = np.max(prediction) * 100
-
-
-# ===================== DISPLAY RESULT =====================
-
-# Prediction section ko visually separate karne ke liye horizontal line.
-st.markdown("---")
-
-# Heading display kar rahe hain.
-st.subheader("Prediction Result")
-
-# Final predicted digit ko green success box me show kar rahe hain.
-st.success(f"Predicted Digit : {predicted_digit}")
-
-# Prediction ki confidence percentage show kar rahe hain.
-st.info(f"Confidence : {confidence:.2f}%")
+    # Highest probability ko percentage me convert kar rahe hain.
+    # Isse pata chalta hai model prediction ko kitna confidently kar raha hai.
+    confidence = np.max(prediction) * 100
 
 
-# ===================== TOP 3 PREDICTIONS =====================
+    # ===================== DISPLAY RESULT =====================
 
-# Top 3 highest probable digits show karenge.
-# Isse user dekh sakta hai ki model kis digit ko second aur third option maan raha tha.
-st.subheader("Top 3 Predictions")
+    # Prediction section ko visually separate karne ke liye horizontal line.
+    st.markdown("---")
 
-# Sabhi probabilities ko descending order me sort karke
-# sabse pehli 3 values select kar rahe hain.
-top3 = np.argsort(prediction[0])[::-1][:3]
+    # Heading display kar rahe hain.
+    st.subheader("Prediction Result")
 
-# Top 3 digits aur unki confidence percentage display kar rahe hain.
-for i in top3:
-    st.write(f"Digit {i} : {prediction[0][i] * 100:.2f}%")
+    # Final predicted digit ko green success box me show kar rahe hain.
+    st.success(f"Predicted Digit : {predicted_digit}")
 
-
-# ===================== PROBABILITY GRAPH =====================
-
-# Har digit (0–9) ki prediction probability ko bar chart me show kar rahe hain.
-# Is graph se easily pata chal jata hai ki model kis digit ko
-# sabse zyada aur kis digit ko sabse kam probability de raha hai.
-st.subheader("Prediction Probability")
-st.bar_chart(prediction[0])
+    # Prediction ki confidence percentage show kar rahe hain.
+    st.info(f"Confidence : {confidence:.2f}%")
 
 
-# ===================== FOOTER =====================
+    # ===================== TOP 3 PREDICTIONS =====================
 
-# App ke end me horizontal line.
-st.markdown("---")
+    # Top 3 highest probable digits show karenge.
+    # Isse user dekh sakta hai ki model kis digit ko second aur third option maan raha tha.
+    st.subheader("Top 3 Predictions")
 
-# Developer information display kar rahe hain.
-st.caption("Developed using TensorFlow, OpenCV and Streamlit")
+    # Sabhi probabilities ko descending order me sort karke
+    # sabse pehli 3 values select kar rahe hain.
+    top3 = np.argsort(prediction[0])[::-1][:3]
+
+    # Top 3 digits aur unki confidence percentage display kar rahe hain.
+    for i in top3:
+        st.write(f"Digit {i} : {prediction[0][i] * 100:.2f}%")
+
+
+    # ===================== PROBABILITY GRAPH =====================
+
+    # Har digit (0–9) ki prediction probability ko bar chart me show kar rahe hain.
+    # Is graph se easily pata chal jata hai ki model kis digit ko
+    # sabse zyada aur kis digit ko sabse kam probability de raha hai.
+    st.subheader("Prediction Probability")
+    st.bar_chart(prediction[0])
+
+
+    # ===================== FOOTER =====================
+
+    # App ke end me horizontal line.
+    st.markdown("---")
+
+    # Developer information display kar rahe hain.
+    st.caption("Developed using TensorFlow, OpenCV and Streamlit")
